@@ -25,12 +25,12 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/kourosh/gomacui/pkg/components"
+	"github.com/kourosh-alasti/gomacui/internal/base"
 )
 
 // NativeWindow wraps a native macOS NSWindow
 type NativeWindow struct {
-	*components.BaseWindow
+	*base.BaseWindow
 	nsWindow unsafe.Pointer
 }
 
@@ -41,7 +41,7 @@ func init() {
 // NewNativeWindow creates a new native macOS window
 func NewNativeWindow(title string) *NativeWindow {
 	w := &NativeWindow{
-		BaseWindow: components.NewWindow(title),
+		BaseWindow: base.NewWindow(title),
 	}
 
 	// Create native window
