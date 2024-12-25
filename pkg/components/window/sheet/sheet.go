@@ -22,7 +22,8 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/kourosh/gomacui/pkg/components"
+	"github.com/kourosh-alasti/gomacui/internal/base"
+	native_window "github.com/kourosh-alasti/gomacui/pkg/components/window/window/native"
 )
 
 // SheetResponse represents the user's response to a sheet
@@ -40,8 +41,8 @@ type SheetCallback func(response SheetResponse)
 
 // Sheet represents a window-attached sheet
 type Sheet struct {
-	*NativeWindow
-	parentWindow *NativeWindow
+	*native_window.NativeWindow
+	parentWindow *native_window.NativeWindow
 	callback     SheetCallback
 	isPresented  bool
 }
@@ -67,10 +68,10 @@ func handleSheetResponse(sheet unsafe.Pointer, response C.int) {
 }
 
 // NewSheet creates a new sheet window
-func NewSheet(title string, parent *NativeWindow) *Sheet {
+func NewSheet(title string, parent *native_window.NativeWindow) *Sheet {
 	// Create base window without native window
-	base := &NativeWindow{
-		BaseWindow: components.NewWindow(title),
+	base := &native_window.NativeWindow{
+		BaseWindow: base.NewWindow(title),
 	}
 
 	s := &Sheet{
@@ -162,7 +163,7 @@ func (s *Sheet) SetButtonTitles(okTitle, cancelTitle string) {
 }
 
 // SetContentView sets the main content view of the sheet
-func (s *Sheet) SetContentView(view components.View) {
+func (s *Sheet) SetContentView(view base.View) {
 	if view == nil {
 		return
 	}
