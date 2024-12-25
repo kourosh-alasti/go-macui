@@ -1,4 +1,4 @@
-package window
+package toolbar
 
 /*
 #cgo CFLAGS: -x objective-c
