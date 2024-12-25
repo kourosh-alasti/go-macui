@@ -16,6 +16,7 @@ void setToolbarAllowsUserCustomization(void* toolbar, bool allows);
 void setToolbarShowsBaselineSeparator(void* toolbar, bool shows);
 void setToolbarItemColor(void* item, float r, float g, float b, float a);
 */
+
 import "C"
 import (
 	"image/color"
