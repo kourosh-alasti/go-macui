@@ -20,6 +20,8 @@ import (
 	"runtime"
 	"sync"
 	"unsafe"
+
+	native_window "github.com/kourosh-alasti/gomacui/pkg/components/window/window/native"
 )
 
 // DialogStyle represents the style of the dialog
@@ -68,7 +70,7 @@ type DialogCallback func(response DialogResponse)
 // Dialog represents a modal dialog window
 type Dialog struct {
 	nsDialog     unsafe.Pointer
-	parentWindow *NativeWindow
+	parentWindow *native_window.NativeWindow
 	callback     DialogCallback
 	style        DialogStyle
 	icon         DialogIcon
@@ -96,7 +98,7 @@ func handleDialogResponse(dialog unsafe.Pointer, response C.int) {
 }
 
 // NewDialog creates a new dialog window
-func NewDialog(title, message, informativeText string, parent *NativeWindow) *Dialog {
+func NewDialog(title, message, informativeText string, parent *native_window.NativeWindow) *Dialog {
 	cTitle := C.CString(title)
 	defer C.free(unsafe.Pointer(cTitle))
 	cMessage := C.CString(message)
