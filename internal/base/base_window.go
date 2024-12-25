@@ -1,9 +1,7 @@
-package window
+package base
 
 import (
 	"image"
-
-	"github.com/kourosh/gomacui/internal/base"
 )
 
 // WindowStyle defines the visual style and behavior of a window
@@ -25,7 +23,7 @@ const (
 
 // Window represents a native macOS window
 type Window interface {
-	base.View
+	View
 
 	// Window specific methods
 	Title() string
@@ -53,18 +51,18 @@ type Window interface {
 	MoveToScreen(screen int)
 
 	// Window content
-	ContentView() base.View
-	SetContentView(view base.View)
+	ContentView() View
+	SetContentView(view View)
 }
 
 // BaseWindow provides a default implementation of the Window interface
 type BaseWindow struct {
-	*base.BaseView
+	*BaseView
 	title       string
 	style       WindowStyle
 	minSize     image.Point
 	maxSize     image.Point
-	contentView base.View
+	contentView View
 
 	isMinimized bool
 	isMaximized bool
@@ -74,7 +72,7 @@ type BaseWindow struct {
 // NewWindow creates a new window with default style
 func NewWindow(title string) *BaseWindow {
 	w := &BaseWindow{
-		BaseView: base.NewBaseView(),
+		BaseView: NewBaseView(),
 		title:    title,
 		style:    WindowStyleDefault,
 		minSize:  image.Point{200, 100},   // Sensible defaults
@@ -168,12 +166,12 @@ func (w *BaseWindow) MoveToScreen(screen int) {
 }
 
 // ContentView returns the window's content view
-func (w *BaseWindow) ContentView() base.View {
+func (w *BaseWindow) ContentView() View {
 	return w.contentView
 }
 
 // SetContentView sets the window's content view
-func (w *BaseWindow) SetContentView(view base.View) {
+func (w *BaseWindow) SetContentView(view View) {
 	if w.contentView != nil {
 		w.RemoveChild(w.contentView)
 	}
