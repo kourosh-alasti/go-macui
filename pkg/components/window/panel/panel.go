@@ -17,7 +17,8 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/kourosh/gomacui/docs/old/pkg/components"
+	"github.com/kourosh-alasti/gomacui/internal/base"
+	native_window "github.com/kourosh-alasti/gomacui/pkg/components/window/window/native"
 )
 
 // PanelStyle defines the visual style and behavior of a panel window
@@ -53,7 +54,7 @@ const (
 
 // Panel represents a utility window in macOS
 type Panel struct {
-	*NativeWindow
+	*native_window.NativeWindow
 	style    PanelStyle
 	behavior PanelBehavior
 }
@@ -61,8 +62,8 @@ type Panel struct {
 // NewPanel creates a new panel window
 func NewPanel(title string, style PanelStyle) *Panel {
 	// Create base window without native window
-	base := &NativeWindow{
-		BaseWindow: components.NewWindow(title),
+	base := &native_window.NativeWindow{
+		BaseWindow: base.NewWindow(title),
 	}
 
 	p := &Panel{
