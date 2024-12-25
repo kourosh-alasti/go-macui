@@ -23,7 +23,7 @@ void setWindowBackgroundColor(void* window, float r, float g, float b, float a);
 void setWindowTitlebarAppearsTransparent(void* window, bool transparent);
 void setWindowTitleVisibility(void* window, int visibility);
 void setWindowToolbarStyle(void* window, int style);
-void setWindowDelegate(void* window, 
+void setWindowDelegate(void* window,
     window_will_close_callback willCloseCallback,
     window_did_resize_callback didResizeCallback,
     window_did_move_callback didMoveCallback,
@@ -61,12 +61,14 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/kourosh/gomacui/pkg/components"
+	"github.com/kourosh-alasti/gomacui/internal/base"
+	"github.com/kourosh-alasti/gomacui/pkg/components/window/toolbar"
+	native_window "github.com/kourosh-alasti/gomacui/pkg/components/window/window/native"
 )
 
 // Global map to store window instances
 var (
-	windowMap = make(map[unsafe.Pointer]*StandardWindow)
+	windowMap   = make(map[unsafe.Pointer]*StandardWindow)
 	windowMutex sync.RWMutex
 )
 
@@ -129,18 +131,18 @@ const (
 type CollectionBehavior uint64
 
 const (
-	CollectionBehaviorDefault CollectionBehavior = 0
-	CollectionBehaviorCanJoinAllSpaces CollectionBehavior = 1 << 0
-	CollectionBehaviorMoveToActiveSpace CollectionBehavior = 1 << 1
-	CollectionBehaviorManaged CollectionBehavior = 1 << 2
-	CollectionBehaviorTransient CollectionBehavior = 1 << 3
-	CollectionBehaviorStationary CollectionBehavior = 1 << 4
-	CollectionBehaviorParticipatesInCycle CollectionBehavior = 1 << 5
-	CollectionBehaviorIgnoresCycle CollectionBehavior = 1 << 6
-	CollectionBehaviorFullScreenPrimary CollectionBehavior = 1 << 7
-	CollectionBehaviorFullScreenAuxiliary CollectionBehavior = 1 << 8
-	CollectionBehaviorFullScreenNone CollectionBehavior = 1 << 9
-	CollectionBehaviorFullScreenAllowsTiling CollectionBehavior = 1 << 11
+	CollectionBehaviorDefault                   CollectionBehavior = 0
+	CollectionBehaviorCanJoinAllSpaces          CollectionBehavior = 1 << 0
+	CollectionBehaviorMoveToActiveSpace         CollectionBehavior = 1 << 1
+	CollectionBehaviorManaged                   CollectionBehavior = 1 << 2
+	CollectionBehaviorTransient                 CollectionBehavior = 1 << 3
+	CollectionBehaviorStationary                CollectionBehavior = 1 << 4
+	CollectionBehaviorParticipatesInCycle       CollectionBehavior = 1 << 5
+	CollectionBehaviorIgnoresCycle              CollectionBehavior = 1 << 6
+	CollectionBehaviorFullScreenPrimary         CollectionBehavior = 1 << 7
+	CollectionBehaviorFullScreenAuxiliary       CollectionBehavior = 1 << 8
+	CollectionBehaviorFullScreenNone            CollectionBehavior = 1 << 9
+	CollectionBehaviorFullScreenAllowsTiling    CollectionBehavior = 1 << 11
 	CollectionBehaviorFullScreenDisallowsTiling CollectionBehavior = 1 << 12
 )
 
@@ -159,20 +161,20 @@ type WindowEventHandler interface {
 
 // StandardWindow represents a standard macOS window with additional features
 type StandardWindow struct {
-	*NativeWindow
+	*native_window.NativeWindow
 	titlebarStyle   TitlebarStyle
 	toolbarStyle    ToolbarStyle
 	backgroundColor color.Color
 	eventHandler    WindowEventHandler
 	eventMutex      sync.RWMutex
-	toolbar         *Toolbar
+	toolbar         *toolbar.Toolbar
 }
 
 // NewStandardWindow creates a new standard window
 func NewStandardWindow(title string) *StandardWindow {
 	// Create base window without native window
-	base := &NativeWindow{
-		BaseWindow: components.NewWindow(title),
+	base := &native_window.NativeWindow{
+		BaseWindow: base.NewWindow(title),
 	}
 
 	w := &StandardWindow{
@@ -418,7 +420,7 @@ func (w *StandardWindow) SetBackgroundColor(c color.Color) {
 }
 
 // SetToolbar sets the window's toolbar
-func (w *StandardWindow) SetToolbar(toolbar *Toolbar) {
+func (w *StandardWindow) SetToolbar(toolbar *toolbar.Toolbar) {
 	w.toolbar = toolbar
 	if toolbar != nil {
 		C.setWindowToolbar(w.nsWindow, toolbar.nsToolbar)
@@ -428,7 +430,7 @@ func (w *StandardWindow) SetToolbar(toolbar *Toolbar) {
 }
 
 // Toolbar returns the window's toolbar
-func (w *StandardWindow) Toolbar() *Toolbar {
+func (w *StandardWindow) Toolbar() *toolbar.Toolbar {
 	return w.toolbar
 }
 
